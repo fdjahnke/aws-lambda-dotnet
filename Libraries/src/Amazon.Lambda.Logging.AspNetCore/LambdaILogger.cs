@@ -1,33 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Amazon.Lambda.Logging.AspNetCore;
 
 namespace Microsoft.Extensions.Logging
 {
-	internal class LambdaILogger : ILogger
+	internal class LambdaILogger : LambdaBaseLogger
 	{
-		// Private fields
-		private readonly string _categoryName;
-		private readonly LambdaLoggerOptions _options;
-
-
-		internal IExternalScopeProvider ScopeProvider { get; set; }
-
 		// Constructor
-		public LambdaILogger(string categoryName, LambdaLoggerOptions options)
-		{
-			_categoryName = categoryName;
-			_options = options;
-		}
-
-		// ILogger methods
-		public IDisposable BeginScope<TState>(TState state) => ScopeProvider?.Push(state) ?? new NoOpDisposable();
-
-		public bool IsEnabled(LogLevel logLevel)
-		{
-			return (
-				_options.Filter == null ||
-				_options.Filter(_categoryName, logLevel));
-		}
+		public LambdaILogger(string categoryName, LambdaLoggerOptions options): base(categoryName, options){ }
 
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
@@ -96,14 +76,5 @@ namespace Microsoft.Extensions.Logging
 				}
 			}
 		}
-
-		// Private classes	       
-		private class NoOpDisposable : IDisposable
-		{
-			public void Dispose()
-			{
-			}
-		}
-
-	}
+    }
 }

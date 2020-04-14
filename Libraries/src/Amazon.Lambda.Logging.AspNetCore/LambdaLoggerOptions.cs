@@ -20,6 +20,7 @@ namespace Microsoft.Extensions.Logging
         private const string INCLUDE_EXCEPTION_KEY = "IncludeException";
 		private const string INCLUDE_EVENT_ID_KEY = "IncludeEventId";
 		private const string INCLUDE_SCOPES_KEY = "IncludeScopes";
+        private const string USE_JSON_KEY = "UseJsonLogger";
         private const string LOG_LEVEL_KEY = "LogLevel";
         private const string DEFAULT_CATEGORY = "Default";
 
@@ -60,6 +61,12 @@ namespace Microsoft.Extensions.Logging
         /// </summary>
         public bool IncludeScopes { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the json logger should be used to log the message.
+        /// Defaults to <c>false</c>.
+        /// </summary>
+        public bool UseJsonLogger { get; set; }
+
 		/// <summary>
         /// Function used to filter events based on the log level.
         /// Default value is null and will instruct logger to log everything.
@@ -78,6 +85,7 @@ namespace Microsoft.Extensions.Logging
             IncludeException = false;
             IncludeEventId = false;
             IncludeScopes = false;
+            UseJsonLogger = false;
             Filter = null;
         }
 
@@ -149,6 +157,11 @@ namespace Microsoft.Extensions.Logging
             if (TryGetString(loggerConfiguration, INCLUDE_NEWLINE_KEY, out string includeNewlineString))
             {
                 IncludeNewline = bool.Parse(includeNewlineString);
+            }
+
+            if (TryGetString(loggerConfiguration, USE_JSON_KEY, out string useJsonLogger))
+            {
+                UseJsonLogger = bool.Parse(useJsonLogger);
             }
 
             if (TryGetSection(loggerConfiguration, LOG_LEVEL_KEY, out IConfiguration logLevelsSection))

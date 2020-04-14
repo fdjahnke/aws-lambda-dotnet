@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.Logging
         // Private fields
         private readonly LambdaLoggerOptions _options;
         private IExternalScopeProvider _scopeProvider;
-        private readonly ConcurrentDictionary<string, LambdaILogger> _loggers;
+        private readonly ConcurrentDictionary<string, LambdaBaseLogger> _loggers;
 
         // Constants
         private const string DEFAULT_CATEGORY_NAME = "Default";
@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.Logging
             }
 
             _options = options;
-            _loggers = new ConcurrentDictionary<string, LambdaILogger>();
+            _loggers = new ConcurrentDictionary<string, LambdaBaseLogger>();
             _scopeProvider = options.IncludeScopes ? new LoggerExternalScopeProvider() : NullExternalScopeProvider.Instance;
         }
 
@@ -42,10 +42,21 @@ namespace Microsoft.Extensions.Logging
         public ILogger CreateLogger(string categoryName)
         {
             var name = string.IsNullOrEmpty(categoryName) ? DEFAULT_CATEGORY_NAME : categoryName;
-
-            return _loggers.GetOrAdd(name, loggerName => new LambdaILogger(name, _options)
+            
+            return _loggers.GetOrAdd(name, loggerName =>
             {
-                ScopeProvider = _scopeProvider
+                if (_options.UseJsonLogger)
+                {
+                    return new LambdaJsonLogger(name, _options)
+                    {
+                        ScopeProvider = _scopeProvider
+                    };
+                }
+
+                return new LambdaILogger(name, _options) 
+                {
+                    ScopeProvider = _scopeProvider
+                };
             });
         }
 
