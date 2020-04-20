@@ -23,10 +23,8 @@ namespace Amazon.Lambda.Logging.AspNetCore
         // ILogger methods
         public IDisposable BeginScope<TState>(TState state) => ScopeProvider?.Push(state) ?? new NoOpDisposable();
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+            Func<TState, Exception, string> formatter);
 
         public bool IsEnabled(LogLevel logLevel)
         {

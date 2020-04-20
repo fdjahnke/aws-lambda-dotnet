@@ -10,7 +10,7 @@ namespace Amazon.Lambda.Logging.AspNetCore
         // Constructor
         public LambdaJsonLogger(string categoryName, LambdaLoggerOptions options) : base(categoryName,options){}
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (formatter == null)
             {
@@ -26,7 +26,7 @@ namespace Amazon.Lambda.Logging.AspNetCore
 
             if (_options.IncludeLogLevel)
             {
-                logEntry.LogLevel = logLevel;
+                logEntry.LogLevel = logLevel.ToString();
             }
 
             CreateScopeInformation(logEntry);
@@ -38,7 +38,7 @@ namespace Amazon.Lambda.Logging.AspNetCore
 
             if (_options.IncludeEventId)
             {
-                logEntry.EventId = eventId;
+                logEntry.EventId = eventId.Id;
             }
 
             var text = formatter.Invoke(state, exception);

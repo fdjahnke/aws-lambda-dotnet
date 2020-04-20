@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.Logging
 		// Constructor
 		public LambdaILogger(string categoryName, LambdaLoggerOptions options): base(categoryName, options){ }
 
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
 			if (formatter == null)
 			{

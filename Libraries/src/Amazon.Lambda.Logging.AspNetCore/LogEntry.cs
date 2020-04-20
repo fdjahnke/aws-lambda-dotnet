@@ -7,9 +7,9 @@ namespace Amazon.Lambda.Logging.AspNetCore
 {
     public class LogEntry
     {
-        public LogLevel LogLevel { get; set; }
+        public string LogLevel { get; set; }
         public string Category { get; set; }
-        public EventId EventId { get; set; }
+        public int EventId { get; set; }
         public Exception Exception { get; set; }
         public string Text { get; set; }
 
